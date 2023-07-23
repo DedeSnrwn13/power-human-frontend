@@ -245,6 +245,7 @@
 
 <script>
 export default {
-  layout: 'dashboard'
+  layout: 'dashboard',
+  middleware: 'auth'
 }
 </script>

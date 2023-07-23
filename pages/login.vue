@@ -9,21 +9,43 @@
       Manage your employees to achieve <br />
       a bigger goals for your company
     </p>
-    <form class="w-full card">
+    <form class="w-full card" @submit.prevent="userLogin">
       <div class="form-group">
-        <label for="" class="text-grey">Email Address</label>
-        <input type="email" class="input-field" />
+        <label for="email" class="text-grey">Email Address</label>
+        <input type="email" id="email" class="input-field" v-model="login.email" />
       </div>
       <div class="form-group">
-        <label for="" class="text-grey">Password</label>
-        <input type="password" class="input-field" />
+        <label for="password" class="text-grey">Password</label>
+        <input type="password" id="password" class="input-field" v-model="login.password" />
       </div>
-      <a href="index.html" class="w-full btn btn-primary mt-[14px]">
-        Sign In
-      </a>
-      <!-- <button type="button" class="w-full btn btn-primary mt-[14px]">
+      <button type="submit" class="w-full btn btn-primary mt-[14px]">
           Sign In
-      </button> -->
+      </button>
     </form>
   </section>
 </template>
+
+
+<script>
+export default {
+  auth: 'guest',
+  data() {
+    return {
+      login: {
+        email: '',
+        password: ''
+      }
+    }
+  },
+
+  methods: {
+    async userLogin() {
+      try {
+        let response = await this.$auth.loginWith('local', { data: this.login });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+}
+</script>
