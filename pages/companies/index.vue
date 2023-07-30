@@ -1,22 +1,50 @@
 <template>
   <section class="py-[200px] flex flex-col items-center justify-center px-4">
     <div class="txt-[32px] font-semibold text-dark mb-4">Select Companies</div>
-    <form class="w-full card">
+    <div class="w-full card">
       <div class="form-group">
-        <label for="" class="text-grey">Companies</label>
-        <select name="" id="" class="appearance-none input-field form-icon-chevron_down">
-          <option value="" selected>Company Name</option>
+        <label for="companies" class="text-grey">Companies</label>
+        <p v-if="$fetchState.pending">Fetching Companies...</p>
+        <select v-else name="companies" id="companies" class="appearance-none input-field form-icon-chevron_down" v-model="selectedCompany">
+          <option :value="company.id" v-for="(company, index) in companies.data.data.data" :key="index">
+            {{ company.name }}
+          </option>
         </select>
       </div>
-      <a href="/companies/1" class="w-full btn btn-primary mt-[14px]">
+      <button @click="openCompany()" type="button" class="w-full btn btn-primary mt-[14px]">
         Continue
-      </a>
-    </form>
+      </button>
+      <div class="text-center">or</div>
+      <NuxtLink :to="{ name: 'companies-create' }" class="w-full btn btn-white border-2">
+        Create New Company
+      </NuxtLink>
+    </div>
   </section>
 </template>
 
 <script>
 export default {
-  middleware: 'auth'
+  middleware: 'auth',
+  data() {
+    return {
+      companies: [],
+      selectedCompany: ''
+    }
+  },
+
+  async fetch() {
+    this.companies = await this.$axios.get('/company');
+  },
+
+  methods: {
+    openCompany() {
+      this.$router.push({
+        name: 'companies-id',
+        params: {
+          id: this.selectedCompany
+        }
+      });
+    }
+  }
 }
 </script>
